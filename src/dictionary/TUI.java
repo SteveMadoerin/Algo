@@ -55,7 +55,7 @@ public class TUI {
                 else
                     System.out.println("Dictionary doesn't exist");
                 break;
-            case "r":
+            case "d":
                 if (dictionaryExists())
                     sRemove(Arrays.copyOfRange(args, 1, args.length));
                 else

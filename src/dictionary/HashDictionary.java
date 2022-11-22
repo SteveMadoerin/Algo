@@ -52,6 +52,7 @@ public class HashDictionary<K,V> implements Dictionary<K,V>{
         for(var v : this)
             entries.add(v);
         this.tab = new LinkedList[newPrime(this.tab.length)];
+        this.size = 0;
         for(var v : entries)
             this.insert(v.getKey(), v.getValue());
 
@@ -80,38 +81,6 @@ public class HashDictionary<K,V> implements Dictionary<K,V>{
         return null;
     }
 
-
-/*    @Override
-    public V insert(K key, V value) {
-        //if(search(key) == null)
-        if(adr = searchAdr(key) != -1){
-            oldValue = tab[adr].value;
-            tab[adr].value = value;
-            return oldValue;
-        }
-        // Neueintrag:
-        j = 0;
-        do {
-            adr = (h(k) + s(j,k)) % m;
-            j++;
-        } while(tab[adr] != null && tab[adr]!= key  );
-        tab[adr].key = key;
-        tab[adr].value = value;
-        return null;
-    }
-
-    int searchAdr(K key) {
-        int j = 0;
-        do {
-            adr = (h(key) + s(j, key)) % m;
-            j++;
-        } while (tab[adr] != null && tab[adr].key != key);
-
-        if (tab[adr] != null)
-            return adr;
-        else
-            return -1;
-    }*/
 
     @Override
     public V search(K key) {
