@@ -1,5 +1,5 @@
-// O. Bittel
-// 22.09.2022
+// S. Madoerin
+// 27.11.2022
 package dictionary;
 
 import java.util.Comparator;
@@ -18,11 +18,11 @@ import java.util.NoSuchElementException;
  * @param <V> Value.
  */
 public class BinaryTreeDictionary<K extends Comparable<? super K>, V> implements Dictionary<K, V> {
-    
+
     static private class Node<K, V> {
         private K key;
         private V value;
-        private int height;
+        private int height; // höhe entsprechenden Teilbaums für ALV Bäume
         private Node<K, V> left;
         private Node<K, V> right;
         private Node<K, V> parent; // Elternzeiger here :)
@@ -85,6 +85,7 @@ public class BinaryTreeDictionary<K extends Comparable<? super K>, V> implements
             oldValue = p.value;
             p.value = value;
         }
+        p = balance(p); // erweiterung fü AVL-Bäume
         return p;
     }
 
@@ -123,6 +124,7 @@ public class BinaryTreeDictionary<K extends Comparable<? super K>, V> implements
             p.key = min.key;
             p.value = min.value;
         }
+        p = balance(p); // wegen AVL-Baum
         return p;
     }
 
@@ -139,6 +141,7 @@ public class BinaryTreeDictionary<K extends Comparable<? super K>, V> implements
             if (p.left != null)
                 p.left.parent = p;
         }
+        p = balance(p); // wegen AVL-Baum
         return p;
     }
 
@@ -195,6 +198,90 @@ public class BinaryTreeDictionary<K extends Comparable<? super K>, V> implements
             }
             return current;
         }
+    }
+
+    // erweiterung für ALV-Bäume
+
+    private int getHeight(Node<K,V> p){
+        if(p == null)
+            return -1; // leerer Teilbaum
+        else
+            return p.height;
+    }
+
+    private int getBalance(Node<K,V>p){
+        if(p == null)
+            return 0;
+        else
+            return getHeight(p.right)-getHeight(p.left);
+    }
+
+    private Node<K,V>balance(Node<K,V>p){
+        if(p==null)
+            return null;
+        p.height = Math.max(getHeight(p.left), getHeight(p.right)) + 1; // hoehe aktualisieren
+        // Fall A
+        if(getBalance(p) == -2){
+            // Fall A1
+            if(getBalance(p.left)<=0)
+                p= rotateRight(p);
+            // Fall A2
+            else
+                p = rotateLeftRight(p);
+        }
+        // Fall B
+        else if(getBalance(p)== +2){
+            // Fall B1
+            if(getBalance(p.right)>=0)
+                p = rotateLeft(p);
+            // Fall B2
+            else
+                p = rotateRightLeft(p);
+        }
+        return p;
+    }
+
+    private Node<K,V> rotateRight(Node<K,V> p){
+        assert p.left != null;
+        Node<K,V> q = p.left;
+        p.left = q.right;
+        q.right = p;
+        p.height = Math.max(getHeight(p.left), getHeight(p.right)) + 1;
+        q.height = Math.max(getHeight(q.left), getHeight(q.right)) + 1;
+        return q;
+    }
+
+    // ***************** // ü //
+    private Node<K,V> rotateLeft(Node<K,V> p){
+        assert p.right != null;
+        Node<K,V> q = p.right;
+        p.right = q.left;
+        if(p.right != null)
+            p.right.parent = p;
+        q.left = p;
+        if(q.left != null)
+            q.left.parent = q;
+        p.height = Math.max(getHeight(p.left), getHeight(p.right)) + 1;
+        q.height = Math.max(getHeight(q.left), getHeight(q.right)) + 1;
+        return q;
+    }
+
+    private Node <K,V> rotateLeftRight(Node<K,V> p){
+        assert p.left != null;
+        p.left = rotateLeft(p.left);
+        if(p.left != null){
+            p.left.parent = p;
+        }
+        return rotateRight(p);
+    }
+
+    private Node<K,V> rotateRightLeft(Node<K,V> p){
+        assert p.right != null;
+        p.right = rotateRight(p.right);
+        if(p.right != null){
+            p.right.parent = p;
+        }
+        return rotateLeft(p);
     }
 
 	/**
