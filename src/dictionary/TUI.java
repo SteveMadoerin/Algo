@@ -158,7 +158,8 @@ public class TUI {
                 System.out.println("HashDicitionary sucessfully created!");
                 return;
             } else if (arg.equals("binarytreedictionary")){
-                System.out.println("//muss erst für die naechste Abgabe implementiert werden :) \n");
+                dictionary = new BinaryTreeDictionary<>();
+                System.out.println("BinaryTreeDictionary sucessfully created! \n");
                 return;
             }
         }
