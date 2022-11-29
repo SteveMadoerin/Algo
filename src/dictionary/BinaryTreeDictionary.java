@@ -71,6 +71,7 @@ public class BinaryTreeDictionary<K extends Comparable<? super K>, V> implements
     private Node<K,V> insertR(K key, V value, Node<K,V>p){
         if (p == null){
             p = new Node(key, value);
+            size++;
             oldValue = null;
         } else if (key.compareTo(p.key)<0) {
             p.left = insertR(key, value, p.left);
@@ -114,6 +115,7 @@ public class BinaryTreeDictionary<K extends Comparable<? super K>, V> implements
             //p muss gelöscht werden & hat 1 Kind oder kein Kind:
             oldValue = p.value;
             p = (p.left != null) ? p.left : p.right;
+            size--;
         } else {
             // p muss gelöscht werden und hat zwei Kinder:
             MinEntry<K,V> min = new MinEntry<K,V>();
@@ -123,6 +125,7 @@ public class BinaryTreeDictionary<K extends Comparable<? super K>, V> implements
             oldValue = p.value;
             p.key = min.key;
             p.value = min.value;
+            size--;
         }
         p = balance(p); // wegen AVL-Baum
         return p;
