@@ -14,7 +14,8 @@ import java.util.*;
 public class TopologicalSort<V> {
     private List<V> ts = new LinkedList<>(); // topologisch sortierte Folge
 	// ...
-
+	//int[] inDegree; // Anzahl noch nicht besuchter Vorgänger
+	//Queue<V> q;
 	/**
 	 * Führt eine topologische Sortierung für g durch.
 	 * @param g gerichteter Graph.
@@ -38,7 +39,7 @@ public class TopologicalSort<V> {
 		Queue<V> q = new LinkedList<>();
 		Map<V, Integer> deg = new TreeMap<>();
 
-		for(V v : g.getVertexSet())
+		for(var v : g.getVertexSet())
 		{
 			deg.put(v, g.getInDegree(v));
 			if(deg.get(v) == 0)
@@ -49,7 +50,7 @@ public class TopologicalSort<V> {
 		{
 			V v = q.remove();
 			ts.add(v);
-			for(V w : g.getSuccessorVertexSet(v))
+			for(var w : g.getSuccessorVertexSet(v))
 			{
 				deg.put(w, deg.get(w) - 1);
 				if (deg.get(w) == 0)
@@ -77,8 +78,35 @@ public class TopologicalSort<V> {
 
 		TopologicalSort<Integer> ts = new TopologicalSort<>(g);
 		
-		if (ts.topologicalSortedList() != null) {
+		if (ts.topologicalSortedList() != null)
 			System.out.println(ts.topologicalSortedList()); // [1, 2, 3, 4, 5, 6, 7]
-		}
+
+		DirectedGraph<String> g2 = new AdjacencyListDirectedGraph<>();
+		g2.addEdge("Unterhose", "Hose");
+		g2.addEdge("Socken", "Schuhe");
+		g2.addEdge("Unterhemd", "Hemd");
+		g2.addEdge("Hose", "Schuhe");
+		g2.addEdge("Hose","Guertel");
+		g2.addEdge("Hemd", "Pulli");
+		g2.addEdge("Pulli", "Mantel");
+		g2.addEdge("Guertel", "Mantel");
+		g2.addEdge("Schuhe", "Handschuhe");
+		g2.addEdge("Mantel", "Schal");
+		g2.addEdge("Schal", "Handschuhe");
+		g2.addEdge("Muetze", "Handschuhe");
+
+		TopologicalSort<String> ts2 = new TopologicalSort<>(g2);
+
+		if (ts2.topologicalSortedList() != null)
+			System.out.println(ts2.topologicalSortedList());
+
+		g2.addEdge("Schal", "Hose");
+
+		TopologicalSort<String> ts3 = new TopologicalSort<>(g2);
+
+		if (ts3.topologicalSortedList() != null)
+			System.out.println(ts3.topologicalSortedList());
+
+
 	}
 }
