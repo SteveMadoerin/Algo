@@ -11,6 +11,7 @@ public class BenchMarks {
         sortedArrayTest();
         System.out.println("+++++++++++++++++++++++++++++++++++++");
         hashTest();
+        //binaryTest();
     }
 
     private static void sortedArrayTest() throws FileNotFoundException {
@@ -248,4 +249,7 @@ public class BenchMarks {
         endTime = System.currentTimeMillis();
         System.out.println("HashDictionary: Nicht erfolgreiches Suchen fuer 16000 Eintraege = " + (endTime - startTime) + "ms");
     }
+
+
+
 }
