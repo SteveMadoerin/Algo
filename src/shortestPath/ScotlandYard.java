@@ -16,7 +16,7 @@ import java.util.Scanner;
 
 /**
  * Kürzeste Wege im Scotland-Yard Spielplan mit A* und Dijkstra.
- * @author Oliver Bittel
+ * @author Oliver Bittel & Steve Madörin
  * @since 26.09.2022
  */
 public class ScotlandYard {
@@ -37,9 +37,44 @@ public class ScotlandYard {
 	public static DirectedGraph<Integer> getGraph() throws FileNotFoundException {
 
 		DirectedGraph<Integer> sy_graph = new AdjacencyListDirectedGraph<>();
-		Scanner in = new Scanner(new File("ScotlandYard_Kanten.txt"));
+		Scanner in = new Scanner(new File("src/shortestPath/ScotlandYard_Kanten.txt"));
 
-		// ...
+		while (in.hasNextLine())
+		{
+			String[] st = in.nextLine().split(" ");
+
+			var v = Integer.parseInt(st[0]);
+			var w = Integer.parseInt(st[1]);
+			var weight = 0;
+			var transportation = st[2];
+
+			switch (transportation){
+				case "Bus":
+					weight = 3;
+					break;
+				case "Taxi":
+					weight = 2;
+					break;
+				case "UBahn":
+					weight = 5;
+					break;
+				default:
+					System.err.println("Input not valid");
+					break;
+			}
+
+			if (sy_graph.containsEdge(v, w) && sy_graph.containsVertex(v) && sy_graph.getWeight(v, w) < weight)
+			{
+				continue;
+			}
+
+			sy_graph.addEdge(v, w, weight);
+			sy_graph.addEdge(w, v, weight);
+		}
+
+		in.close();
+
+
 		
 		// Test, ob alle Kanten eingelesen wurden: 
 		System.out.println("Number of Vertices:       " + sy_graph.getNumberOfVertexes());	// 199
@@ -142,12 +177,26 @@ class ScotlandYardHeuristic implements Heuristic<Integer> {
 	}
 
 	public ScotlandYardHeuristic() throws FileNotFoundException {
-		// ...
+		coord = new HashMap<>();
+		Scanner in = new Scanner(new File("src/shortestPath/ScotlandYard_Knoten.txt"));
+
+		while(in.hasNextLine())
+		{
+			String[] str = in.nextLine().split(" ");
+			var no = Integer.parseInt(str[0]);
+			var x = Integer.parseInt(str[1]);
+			var y = Integer.parseInt(str[2]);
+			coord.put(no, new Point(x, y));
+		}
+
+		in.close();
+
 	}
 
 	public double estimatedCost(Integer u, Integer v) {
-		// ...
-		return 0.0;
+		Point a = coord.get(u);
+		Point b = coord.get(v);
+		return (1/30) * Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
 	}
 }
 
