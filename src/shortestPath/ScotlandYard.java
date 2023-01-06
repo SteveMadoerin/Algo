@@ -211,7 +211,7 @@ class ScotlandYardHeuristic implements Heuristic<Integer> {
 	public double estimatedCost(Integer u, Integer v) {
 		Point a = coord.get(u);
 		Point b = coord.get(v);
-		return (1/30) * Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+		return (double)(1/30) * Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
 	}
 }
 
