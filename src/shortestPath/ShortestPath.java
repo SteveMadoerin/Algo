@@ -5,7 +5,9 @@ package shortestPath;
 import graph.*;
 import sim.SYSimulation;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 // ...
 
@@ -97,7 +99,7 @@ public class ShortestPath<V> {
 
 			if(sim != null)
 			{
-				sim.visitStation((int) v);
+				sim.visitStation((int) v, Color.CYAN);
 			}
 
 			//Zielknoten erreicht
