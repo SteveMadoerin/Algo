@@ -114,8 +114,8 @@ public class ScotlandYard {
 
 		DirectedGraph<Integer> syGraph = getGraph();
 		
-		Heuristic<Integer> syHeuristic = null; // Dijkstra
-		//Heuristic<Integer> syHeuristic = getHeuristic(); // A*
+		//Heuristic<Integer> syHeuristic = null; // Dijkstra
+		Heuristic<Integer> syHeuristic = getHeuristic(); // A*
 
 		ShortestPath<Integer> sySp = new ShortestPath<Integer>(syGraph,syHeuristic);
 
@@ -152,7 +152,22 @@ public class ScotlandYard {
 		int a = -1;
 		for (int b : sp) {
 			if (a != -1)
-			sim.drive(a, b, Color.RED.darker());
+				switch ((int) sySp.dirgra.getWeight(a,b))
+				{
+					case 2:
+						sim.drive(a, b, Color.GREEN.darker());
+						break;
+					case 3:
+						sim.drive(a, b, Color.YELLOW.darker());
+						break;
+					case 5:
+						sim.drive(a, b, Color.RED.darker());
+						break;
+					default:
+						System.out.println("no data");
+						break;
+				}
+			//sim.drive(a, b, Color.RED.darker());
 			sim.visitStation(b);
 			a = b;
 		}
@@ -182,10 +197,10 @@ class ScotlandYardHeuristic implements Heuristic<Integer> {
 
 		while(in.hasNextLine())
 		{
-			String[] str = in.nextLine().split(" ");
-			var no = Integer.parseInt(str[0]);
-			var x = Integer.parseInt(str[1]);
-			var y = Integer.parseInt(str[2]);
+			//String[] str = in.nextLine().split(" ");
+			var no = in.nextInt();
+			var x = in.nextInt();
+			var y = in.nextInt();
 			coord.put(no, new Point(x, y));
 		}
 
