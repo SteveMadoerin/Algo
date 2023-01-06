@@ -114,8 +114,8 @@ public class ScotlandYard {
 
 		DirectedGraph<Integer> syGraph = getGraph();
 		
-		//Heuristic<Integer> syHeuristic = null; // Dijkstra
-		Heuristic<Integer> syHeuristic = getHeuristic(); // A*
+		Heuristic<Integer> syHeuristic = null; // Dijkstra
+		//Heuristic<Integer> syHeuristic = getHeuristic(); // A*
 
 		ShortestPath<Integer> sySp = new ShortestPath<Integer>(syGraph,syHeuristic);
 
@@ -155,10 +155,10 @@ public class ScotlandYard {
 				switch ((int) sySp.dirgra.getWeight(a,b))
 				{
 					case 2:
-						sim.drive(a, b, Color.GREEN.darker());
+						sim.drive(a, b, Color.GREEN);
 						break;
 					case 3:
-						sim.drive(a, b, Color.YELLOW.darker());
+						sim.drive(a, b, Color.YELLOW);
 						break;
 					case 5:
 						sim.drive(a, b, Color.RED.darker());
@@ -168,7 +168,7 @@ public class ScotlandYard {
 						break;
 				}
 			//sim.drive(a, b, Color.RED.darker());
-			sim.visitStation(b);
+			sim.visitStation(b, Color.BLUE);
 			a = b;
 		}
 
@@ -179,7 +179,8 @@ public class ScotlandYard {
 
 }
 
-class ScotlandYardHeuristic implements Heuristic<Integer> {
+class ScotlandYardHeuristic implements Heuristic<Integer>
+{
 	private Map<Integer,Point> coord; // Ordnet jedem Knoten seine Koordinaten zu
 
 	private static class Point {
@@ -191,7 +192,8 @@ class ScotlandYardHeuristic implements Heuristic<Integer> {
 		}
 	}
 
-	public ScotlandYardHeuristic() throws FileNotFoundException {
+	public ScotlandYardHeuristic() throws FileNotFoundException
+	{
 		coord = new HashMap<>();
 		Scanner in = new Scanner(new File("src/shortestPath/ScotlandYard_Knoten.txt"));
 
@@ -208,9 +210,11 @@ class ScotlandYardHeuristic implements Heuristic<Integer> {
 
 	}
 
-	public double estimatedCost(Integer u, Integer v) {
+	public double estimatedCost(Integer u, Integer v)
+	{
 		Point a = coord.get(u);
 		Point b = coord.get(v);
+
 		return (double)(1/30) * Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
 	}
 }
