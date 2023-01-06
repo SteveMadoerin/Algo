@@ -8,10 +8,7 @@ import java.awt.Color;
 import java.io.IOException;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 
 /**
@@ -114,8 +111,8 @@ public class ScotlandYard {
 
 		DirectedGraph<Integer> syGraph = getGraph();
 		
-		Heuristic<Integer> syHeuristic = null; // Dijkstra
-		//Heuristic<Integer> syHeuristic = getHeuristic(); // A*
+		//Heuristic<Integer> syHeuristic = null; // Dijkstra
+		Heuristic<Integer> syHeuristic = getHeuristic(); // A*
 
 		ShortestPath<Integer> sySp = new ShortestPath<Integer>(syGraph,syHeuristic);
 
@@ -194,7 +191,7 @@ class ScotlandYardHeuristic implements Heuristic<Integer>
 
 	public ScotlandYardHeuristic() throws FileNotFoundException
 	{
-		coord = new HashMap<>();
+		coord = new TreeMap<>();
 		Scanner in = new Scanner(new File("src/shortestPath/ScotlandYard_Knoten.txt"));
 
 		while(in.hasNextLine())
@@ -215,7 +212,8 @@ class ScotlandYardHeuristic implements Heuristic<Integer>
 		Point a = coord.get(u);
 		Point b = coord.get(v);
 
-		return (double)(1/30) * Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+		//return (double)(1/30) * Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+		return Math.sqrt(Math.pow(b.x - a.x, 2) + Math.pow(b.y - a.y, 2)) / 30;
 	}
 }
 

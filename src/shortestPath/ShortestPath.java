@@ -100,6 +100,7 @@ public class ShortestPath<V> {
 				sim.visitStation((int) v);
 			}
 
+			//Zielknoten erreicht
 			if(v.equals(g))
 			{
 				return;
@@ -133,7 +134,7 @@ public class ShortestPath<V> {
 	 */
 	public List<V> getShortestPath()
 	{
-		var list = new LinkedList<V>();
+		List<V> list= new LinkedList<>();
 		list.add(goal);
 
 		var x = pred.get(goal);
@@ -151,7 +152,7 @@ public class ShortestPath<V> {
 
 		Collections.reverse(list);
 
-		return list;
+		return Collections.unmodifiableList(list);
 	}
 
 
