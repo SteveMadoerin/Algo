@@ -40,6 +40,7 @@ public class ScotlandYard {
 		{
 			String[] st = in.nextLine().split(" ");
 
+			// messing around with var :D
 			var v = Integer.parseInt(st[0]);
 			var w = Integer.parseInt(st[1]);
 			var weight = 0;
@@ -111,8 +112,8 @@ public class ScotlandYard {
 
 		DirectedGraph<Integer> syGraph = getGraph();
 		
-		//Heuristic<Integer> syHeuristic = null; // Dijkstra
-		Heuristic<Integer> syHeuristic = getHeuristic(); // A*
+		Heuristic<Integer> syHeuristic = null; // Dijkstra
+		//Heuristic<Integer> syHeuristic = getHeuristic(); // A*
 
 		ShortestPath<Integer> sySp = new ShortestPath<Integer>(syGraph,syHeuristic);
 

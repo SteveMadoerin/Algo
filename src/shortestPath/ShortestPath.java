@@ -90,6 +90,7 @@ public class ShortestPath<V> {
 			pred.put(v, null);
 		}
 
+
 		dist.put(s, 0.0);
 		cand.add(s, 0.0 + heu.estimatedCost(s, g));
 
@@ -105,6 +106,8 @@ public class ShortestPath<V> {
 			//Zielknoten erreicht
 			if(v.equals(g))
 			{
+				// for ExampleGraph Test
+				System.out.println("Visit Node fin: " + v + " with dist: " + dist.get(v));
 				return;
 			}
 
@@ -123,6 +126,8 @@ public class ShortestPath<V> {
 					cand.change(w, dist.get(w) + heu.estimatedCost(w, g));
 				}
 			}
+			// For ExampleGraph test
+			System.out.println("Visit Node: " + v + " with dist: " + dist.get(v));
 		}
 
 	}
