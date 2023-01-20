@@ -167,12 +167,12 @@ public class TelNet
 
         // draw the grid
 
-        for (int i = 0; i < yMax; i++)
+        for (int i = 0; i < yMax+1; i++)
         {
             StdDraw.line(0.5, i+0.5,yMax + 0.5, i+0.5);
         }
 
-        for (int i = 0; i < xMax; i++)
+        for (int i = 0; i < xMax+1; i++)
         {
             StdDraw.line(i+0.5, 0.5, i+0.5, xMax+0.5);
         }
@@ -180,8 +180,27 @@ public class TelNet
         for(var s: minSpanTree)
         {
             StdDraw.setPenColor(Color.PINK);
-            StdDraw.line(s.u.x, s.u.y, s.v.x, s.v.y);
-            StdDraw.line(s.v.x, s.v.y, s.u.x, s.u.y);
+            if(s.u.x < s.v.x && s.u.y < s.v.y || s.u.x > s.v.x && s.u.y < s.v.y)
+            {
+                StdDraw.line(s.u.x, s.u.y, s.u.x, s.v.y);
+                StdDraw.line(s.u.x, s.v.y, s.v.x, s.v.y);
+            }
+            else if(s.u.y == s.v.y || s.u.x == s.v.x  )
+            {
+                StdDraw.line(s.u.x, s.u.y, s.v.x, s.v.y);
+            }
+            else if (s.v.x > s.u.x && s.v.y < s.u.y)
+            {
+
+                StdDraw.line(s.v.x, s.v.y, s.u.x, s.v.y);
+                StdDraw.line(s.u.x, s.u.y, s.u.x, s.v.y);
+            }
+            else
+            {
+                StdDraw.line(s.u.x, s.u.y, s.v.x, s.u.y);
+                StdDraw.line(s.v.x, s.u.y, s.v.x, s.v.y);
+            }
+
 
             StdDraw.setPenColor(Color.BLUE);
             StdDraw.filledSquare(s.u.x, s.u.y, 0.5);
