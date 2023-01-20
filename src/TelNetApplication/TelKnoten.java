@@ -13,7 +13,7 @@ public class TelKnoten
     }
 
     public final int x; // x coordinate
-    public final int y; // < coordinate
+    public final int y; // y coordinate
 
     @Override
     public int hashCode()

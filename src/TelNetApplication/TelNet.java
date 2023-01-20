@@ -1,7 +1,7 @@
 package TelNetApplication;
 
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.awt.*;
+import java.util.*;
 import java.util.List;
 
 /**
@@ -12,10 +12,10 @@ import java.util.List;
  * */
 public class TelNet
 {
-    private int leitungsbegrenzungswert;
-    private List<TelVerbindung> minimalSpanningTree;
-    private HashMap<TelKnoten, Integer> nodeMap;
-    private int nodeCounter;
+    private int lbg; // leitungsbegrenzungswert
+    private List<TelVerbindung> minSpanTree;
+    private Map<TelKnoten, Integer> nodeMap;
+    private int size; // Anzahl Knoten
 
     /**
      * Legt ein neues Telefonnetz mit dem Leitungsbegrenzungswert lbg an.
@@ -23,8 +23,8 @@ public class TelNet
      * */
     public TelNet(int lbg)
     {
-        this.leitungsbegrenzungswert = lbg;
-        this.minimalSpanningTree = new LinkedList<>();
+        this.lbg = lbg;
+        this.minSpanTree = new LinkedList<>();
         this.nodeMap = new HashMap<>();
     }
 
@@ -38,7 +38,23 @@ public class TelNet
      * */
     public boolean addTelKnoten(int x, int y)
     {
+        TelKnoten tk = new TelKnoten(x,y);
+
+        // coordinate existiert schon
+        if(nodeMap.containsKey(tk))
+        {
+            return false;
+        }
+
+        // coodinate ist neu
+        nodeMap.put(tk, size++);
         return true;
+    }
+
+    int manhattan_distance(TelKnoten u,TelKnoten v)
+    {
+        return Math.abs(u.x - v.x) + Math.abs(u.y - v.y);
+        //return cost <= lbg ? cost : Integer.MAX_VALUE;
     }
 
     /**
@@ -48,7 +64,49 @@ public class TelNet
      * */
     public boolean computeOptTelNet()
     {
-        return true;
+        // angelehnt an 10-17 Unterlagen
+        // Forest is Menge von Bauemen -> bestehen anfaenlich aus je einem Knoten aus V.
+        UnionFind forest = new UnionFind(size);
+        PriorityQueue<TelVerbindung> edges = new PriorityQueue<>(size, Comparator.comparing(x -> x.c));
+        //List<TelVerbindung> minSpanTree;
+
+        // fill PrioQueue
+        for(var v: nodeMap.entrySet())
+        {
+            for(var w: nodeMap.entrySet())
+            {
+                if(v.equals(w))
+                    continue;
+
+                // kostencalculieren
+                //int cos = (Math.abs(v.getKey().x - w.getKey().x) + Math.abs(v.getKey().y - w.getKey().y));
+                int cos = manhattan_distance(v.getKey(), w.getKey());
+                if(cos <= lbg)
+                {
+                    edges.add(new TelVerbindung(v.getKey(),w.getKey(), cos));
+                }
+
+            }
+        }
+
+        // Alle Kanten werden mit Gewichten in Proliste gesaved -> effizienter zugriff auf Kante mit kleinstem Gewicht.
+
+        // solange wald mehr als 1 Baum enthält & es noch Kanten gibt
+        while((forest.size() != 1) && (!edges.isEmpty()))
+        {
+            TelVerbindung tv = edges.poll();
+            var t1 = forest.find(nodeMap.get(tv.u));
+            var t2 = forest.find(nodeMap.get(tv.v));
+
+            if (t1 != t2)
+            {
+                forest.union(t1,t2);
+                minSpanTree.add(tv);
+            }
+        }
+
+        return !edges.isEmpty() || forest.size() == 1;
+
     }
 
     /**
@@ -58,9 +116,14 @@ public class TelNet
      * Throws:
      * java.lang.IllegalStateException - falls nicht zuvor computeOptTelNet() erfolgreich durchgeführt wurde.
      * */
-    public java.util.List<TelVerbindung> getOptTelNet() throws java.lang.IllegalStateException
+    public List<TelVerbindung> getOptTelNet() throws java.lang.IllegalStateException
     {
-        return new LinkedList<TelVerbindung>();
+/*        if(!computeOptTelNet())
+        {
+            throw new IllegalStateException();
+        }*/
+
+        return minSpanTree;
     }
 
     /**
@@ -72,7 +135,15 @@ public class TelNet
      * */
     public int getOptTelNetKosten() throws java.lang.IllegalStateException
     {
-        return 0;
+/*        if(!computeOptTelNet())
+        {
+            throw new IllegalStateException();
+        }*/
+        int cost = 0;
+        for(var x: minSpanTree){
+            cost += x.c;
+        }
+        return cost;
     }
 
     /**
@@ -85,7 +156,39 @@ public class TelNet
      * */
     public void drawOptTelNet(int xMax, int yMax) throws java.lang.IllegalStateException
     {
-        // be happy
+/*        if(!computeOptTelNet())
+        {
+            throw new IllegalStateException();
+        }*/
+
+        StdDraw.setCanvasSize(256,256);
+        StdDraw.setXscale(0, xMax + 1);
+        StdDraw.setYscale(0, yMax + 1);
+
+        // draw the grid
+
+        for (int i = 0; i < yMax; i++)
+        {
+            StdDraw.line(0.5, i+0.5,yMax + 0.5, i+0.5);
+        }
+
+        for (int i = 0; i < xMax; i++)
+        {
+            StdDraw.line(i+0.5, 0.5, i+0.5, xMax+0.5);
+        }
+
+        for(var s: minSpanTree)
+        {
+            StdDraw.setPenColor(Color.PINK);
+            StdDraw.line(s.u.x, s.u.y, s.v.x, s.v.y);
+            StdDraw.line(s.v.x, s.v.y, s.u.x, s.u.y);
+
+            StdDraw.setPenColor(Color.BLUE);
+            StdDraw.filledSquare(s.u.x, s.u.y, 0.5);
+            StdDraw.filledSquare(s.v.x, s.v.y, 0.5);
+        }
+
+        StdDraw.show(0);
     }
 
     /**
@@ -98,7 +201,16 @@ public class TelNet
      */
     public void generateRandomTelNet(int n, int xMax, int yMax)
     {
-        // still be happy
+        Random r = new Random();
+
+        while(n != 0)
+        {
+            var x = r.nextInt(xMax+1);
+            var y = r.nextInt(yMax+1);
+
+            if(addTelKnoten(x,y))
+                n--;
+        }
     }
 
     /**
@@ -109,17 +221,40 @@ public class TelNet
      */
     public int size()
     {
-        return 0;
+        return this.size;
     }
 
     @Override
     public String toString() {
-        return super.toString();
+        return "Telnet: " + "MinSpanTree: " +minSpanTree+ "telnode: " + nodeMap + "size: " + size + "lbg: " + lbg;
     }
 
     public static void main(String[] args)
     {
-        //main :)
+        run_aufgabe3();
+
+        //run_aufgabe4();
+    }
+
+    public static void run_aufgabe3()
+    {
+        TelNet tn = new TelNet(7);
+
+        tn.addTelKnoten(1,1);
+        tn.addTelKnoten(3,1);
+        tn.addTelKnoten(4,2);
+        tn.addTelKnoten(3,4);
+        tn.addTelKnoten(2,6);
+        tn.addTelKnoten(4,7);
+        tn.addTelKnoten(7,6);
+
+        System.out.println("minSpanTree ? " + tn.computeOptTelNet());
+        System.out.println("Cost: " + tn.getOptTelNetKosten());
+
+        System.out.println(tn);
+
+        tn.drawOptTelNet(7,7);
+
     }
 
 }
