@@ -161,13 +161,13 @@ public class TelNet
             throw new IllegalStateException();
         }*/
 
-        StdDraw.setCanvasSize(256,256);
+        StdDraw.setCanvasSize(333,333);
         StdDraw.setXscale(0, xMax + 1);
         StdDraw.setYscale(0, yMax + 1);
 
         // draw the grid
 
-        for (int i = 0; i < yMax+1; i++)
+/*        for (int i = 0; i < yMax+1; i++)
         {
             StdDraw.line(0.5, i+0.5,yMax + 0.5, i+0.5);
         }
@@ -175,11 +175,16 @@ public class TelNet
         for (int i = 0; i < xMax+1; i++)
         {
             StdDraw.line(i+0.5, 0.5, i+0.5, xMax+0.5);
-        }
+        }*/
 
         for(var s: minSpanTree)
         {
+            if(xMax < 100 || yMax < 100)
+            {
+                StdDraw.setPenRadius(0.01);
+            }
             StdDraw.setPenColor(Color.PINK);
+            //StdDraw.setPenRadius(0.01);
             if(s.u.x < s.v.x && s.u.y < s.v.y || s.u.x > s.v.x && s.u.y < s.v.y)
             {
                 StdDraw.line(s.u.x, s.u.y, s.u.x, s.v.y);
@@ -208,6 +213,27 @@ public class TelNet
         }
 
         StdDraw.show(0);
+    }
+
+    public static void drawGrid(Boolean x, int xMax, int yMax)
+    {
+        // is grid is true
+        if(x)
+        {
+            StdDraw.setPenColor(Color.black);
+            StdDraw.setPenRadius(0.01);
+            for (int i = 0; i < yMax+1; i++)
+            {
+                StdDraw.line(0.5, i+0.5,yMax + 0.5, i+0.5);
+            }
+
+            for (int i = 0; i < xMax+1; i++)
+            {
+                StdDraw.line(i+0.5, 0.5, i+0.5, xMax+0.5);
+            }
+        }
+        StdDraw.show(0);
+
     }
 
     /**
@@ -259,6 +285,7 @@ public class TelNet
     {
         TelNet tn = new TelNet(7);
 
+
         tn.addTelKnoten(1,1);
         tn.addTelKnoten(3,1);
         tn.addTelKnoten(4,2);
@@ -273,7 +300,21 @@ public class TelNet
         System.out.println(tn);
 
         tn.drawOptTelNet(7,7);
+        drawGrid(true,7,7);
 
+    }
+
+    public static void run_aufgabe4()
+    {
+        TelNet tn2 = new TelNet(100);
+        tn2.generateRandomTelNet(1000,1000,1000);
+
+        System.out.println("minSpanTree ? " + tn2.computeOptTelNet());
+        System.out.println("Cost: " + tn2.getOptTelNetKosten());
+
+        System.out.println(tn2);
+
+        tn2.drawOptTelNet(1000,1000);
     }
 
 }
