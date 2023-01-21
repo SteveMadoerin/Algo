@@ -19,6 +19,6 @@ public class TelVerbindung
 
     @Override
     public String toString() {
-        return String.format("Telverbindung: [start %s --> ende %s] Verbindungskostne %d", u, v, c);
+        return String.format("Tv: [start %s --> ende %s] Vk %d ", u, v, c);
     }
 }

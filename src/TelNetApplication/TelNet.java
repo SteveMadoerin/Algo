@@ -271,7 +271,7 @@ public class TelNet
 
     @Override
     public String toString() {
-        return "Telnet: " + "MinSpanTree: " +minSpanTree+ "telnode: " + nodeMap + "size: " + size + "lbg: " + lbg;
+        return "Telnet: \n" + "MinSpanTree: " +minSpanTree+ "\ntelnode: " + nodeMap + "\nsize: " + size + "\nlbg: " + lbg;
     }
 
     public static void main(String[] args)
